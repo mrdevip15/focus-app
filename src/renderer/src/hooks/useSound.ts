@@ -55,6 +55,14 @@ export const useSound = () => {
     setIsPlaying(true);
   }, [currentSound, isPlaying, volume]);
 
+  const stopSound = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setIsPlaying(false);
+    setCurrentSound(null);
+  }, []);
+
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
@@ -76,6 +84,7 @@ export const useSound = () => {
     volume,
     setVolume,
     toggleSound,
+    stopSound,
     playChime,
   };
 };

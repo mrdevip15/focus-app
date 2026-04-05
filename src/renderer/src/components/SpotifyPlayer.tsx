@@ -26,7 +26,7 @@ const Visualizer = ({ isPlaying }: { isPlaying: boolean }) => {
   );
 };
 
-export function SpotifyPlayer() {
+export function SpotifyPlayer({ shouldStop }: { shouldStop?: boolean }) {
   const [tokens, setTokens] = useState<any>(null);
   const tokensRef = useRef<any>(null);
   const [track, setTrack] = useState<any>(null);
@@ -44,6 +44,13 @@ export function SpotifyPlayer() {
       localStorage.removeItem('spotify_tokens');
     }
   }, []);
+
+  useEffect(() => {
+    if (shouldStop && isPlaying && tokens) {
+      spotifyFetch('me/player/pause', { method: 'PUT' });
+      setIsPlaying(false);
+    }
+  }, [shouldStop, isPlaying, tokens, spotifyFetch]);
 
   useEffect(() => {
     const savedTokens = localStorage.getItem('spotify_tokens');

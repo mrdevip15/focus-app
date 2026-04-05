@@ -1,3 +1,4 @@
+import { useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { TimerDisplay } from './components/Timer/TimerDisplay';
 import { TimerControls } from './components/Timer/TimerControls';
@@ -9,8 +10,22 @@ import { useSound } from './hooks/useSound';
 import './styles/global.css';
 
 function App() {
-  const { playChime, currentSound, isPlaying, volume, setVolume, toggleSound } = useSound();
-  const { timeLeft, isRunning, mode, toggle, reset, changeMode, progress } = useTimer('focus', playChime);
+  const { playChime, currentSound, isPlaying, volume, setVolume, toggleSound, stopSound } = useSound();
+  const [shouldStopSpotify, setShouldStopSpotify] = useState(false);
+
+  const handleTimerComplete = useCallback(() => {
+    playChime();
+    stopSound();
+    setShouldStopSpotify(true);
+  }, [playChime, stopSound]);
+
+  const { timeLeft, isRunning, mode, toggle, reset, changeMode, progress } = useTimer('focus', handleTimerComplete);
+
+  useEffect(() => {
+    if (isRunning) {
+      setShouldStopSpotify(false);
+    }
+  }, [isRunning]);
 
   return (
     <div className="bg-zinc-950 text-white min-h-[100dvh]">
@@ -45,7 +60,7 @@ function App() {
 
           {/* Right Column: Utilities */}
           <aside className="flex flex-col gap-8 lg:mt-32 w-full">
-            <SpotifyPlayer />
+            <SpotifyPlayer shouldStop={shouldStopSpotify} />
             <SoundSwitcher 
               currentSound={currentSound}
               isPlaying={isPlaying}
