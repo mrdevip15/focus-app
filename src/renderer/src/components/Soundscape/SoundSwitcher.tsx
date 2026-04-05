@@ -1,5 +1,5 @@
 import { CloudRain, Waves, Coffee, Bird, SpeakerHigh, SpeakerX } from '@phosphor-icons/react';
-import { motion } from 'framer-motion';
+
 import type { SoundType } from '../../hooks/useSound';
 
 interface SoundSwitcherProps {

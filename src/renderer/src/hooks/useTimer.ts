@@ -12,7 +12,7 @@ export const useTimer = (initialMode: FocusMode = 'focus', onComplete?: () => vo
   const [mode, setMode] = useState<FocusMode>(initialMode);
   const [timeLeft, setTimeLeft] = useState(MODE_TIMES[initialMode]);
   const [isRunning, setIsRunning] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const reset = useCallback(() => {
     setIsRunning(false);

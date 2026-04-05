@@ -1,8 +1,9 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { TimerDisplay } from './components/Timer/TimerDisplay';
 import { TimerControls } from './components/Timer/TimerControls';
 import { ModeSelector } from './components/Modes/ModeSelector';
 import { SoundSwitcher } from './components/Soundscape/SoundSwitcher';
+import { SpotifyPlayer } from './components/SpotifyPlayer';
 import { useTimer } from './hooks/useTimer';
 import { useSound } from './hooks/useSound';
 import './styles/global.css';
@@ -44,6 +45,7 @@ function App() {
 
           {/* Right Column: Utilities */}
           <aside className="flex flex-col gap-8 lg:mt-32 w-full">
+            <SpotifyPlayer />
             <SoundSwitcher 
               currentSound={currentSound}
               isPlaying={isPlaying}
