@@ -2,7 +2,9 @@ import { BrowserWindow, ipcMain } from 'electron';
 import crypto from 'crypto';
 
 // In a real app, you'd prompt the user for this or use a proxy server to hide it.
-const SPOTIFY_CLIENT_ID = process.env.VITE_SPOTIFY_CLIENT_ID || '8e4f1a23c31c4f6faef49edc5614949b'; // Dummy ID to prevent crash
+const SPOTIFY_CLIENT_ID = process.env.MAIN_VITE_SPOTIFY_CLIENT_ID || '8e4f1a23c31c4f6faef49edc5614949b'; 
+console.log('Using Spotify Client ID:', SPOTIFY_CLIENT_ID);
+ // Dummy ID to prevent crash
 const REDIRECT_URI = 'focusapp://callback';
 const SCOPES = ['user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing'];
 
@@ -11,16 +13,23 @@ let codeVerifier = '';
 
 export function setupSpotifyAuth(mainWindow: BrowserWindow) {
   ipcMain.handle('spotify-login', async () => {
+    // We lookup the ID here to ensure env vars are populated, with your ID as the default
+    const SPOTIFY_CLIENT_ID = process.env.MAIN_VITE_SPOTIFY_CLIENT_ID || 'dfeac2a2c9de40768242b991f7a4e967';
+    console.log('Attempting Spotify Login with Client ID:', SPOTIFY_CLIENT_ID);
+
     return new Promise((resolve, reject) => {
       authWindow = new BrowserWindow({
-        width: 600,
-        height: 800,
+        width: 800,
+        height: 900,
         show: false,
         webPreferences: {
           nodeIntegration: false,
           contextIsolation: true
         }
       });
+
+      // Set a common browser UserAgent to avoid 'Agree' button issues
+      authWindow.webContents.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
       codeVerifier = generateCodeVerifier();
       const codeChallenge = generateCodeChallenge(codeVerifier);
