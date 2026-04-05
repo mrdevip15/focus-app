@@ -13,13 +13,15 @@ const Visualizer = ({ isPlaying }: { isPlaying: boolean }) => {
       {[...Array(5)].map((_, i) => (
         <motion.div
           key={i}
-          animate={isPlaying ? { height: [4, 16, 8, 14, 4] } : { height: 4 }}
+          initial={{ scaleY: 0.2 }}
+          animate={isPlaying ? { scaleY: [0.2, 1, 0.5, 0.8, 0.2] } : { scaleY: 0.2 }}
           transition={{
             repeat: Infinity,
             duration: 0.5 + i * 0.15,
             ease: "easeInOut",
           }}
-          className="w-[3px] bg-emerald-500/90 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+          style={{ originY: 1 }}
+          className="w-[3px] h-4 bg-emerald-500/90 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.4)] will-change-transform"
         />
       ))}
     </div>
@@ -44,13 +46,6 @@ export function SpotifyPlayer({ shouldStop }: { shouldStop?: boolean }) {
       localStorage.removeItem('spotify_tokens');
     }
   }, []);
-
-  useEffect(() => {
-    if (shouldStop && isPlaying && tokens) {
-      spotifyFetch('me/player/pause', { method: 'PUT' });
-      setIsPlaying(false);
-    }
-  }, [shouldStop, isPlaying, tokens, spotifyFetch]);
 
   useEffect(() => {
     const savedTokens = localStorage.getItem('spotify_tokens');
@@ -134,6 +129,13 @@ export function SpotifyPlayer({ shouldStop }: { shouldStop?: boolean }) {
     }
   }, [updateTokens]);
 
+  useEffect(() => {
+    if (shouldStop && isPlaying && tokens) {
+      spotifyFetch('me/player/pause', { method: 'PUT' });
+      setIsPlaying(false);
+    }
+  }, [shouldStop, isPlaying, tokens, spotifyFetch]);
+
   const fetchStatus = useCallback(async () => {
     const data = await spotifyFetch('me/player');
     if (data && !data.error) {
@@ -165,8 +167,6 @@ export function SpotifyPlayer({ shouldStop }: { shouldStop?: boolean }) {
     setTrack(null);
     setIsPlaying(false);
     setError(null);
-    setLikedSongs([]);
-    setPlaylists([]);
   }, [updateTokens]);
 
   const togglePlay = async () => {
@@ -192,7 +192,7 @@ export function SpotifyPlayer({ shouldStop }: { shouldStop?: boolean }) {
 
   if (!tokens) {
     return (
-      <div className="bg-zinc-900/40 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-10 overflow-hidden shadow-2xl transition-all hover:border-emerald-500/20 group">
+      <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-10 overflow-hidden shadow-2xl transition-all hover:border-emerald-500/20 group">
         <div className="flex flex-col items-center gap-6 text-center relative z-10">
           <div className="w-16 h-16 bg-zinc-800/50 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500">
             <SpotifyLogo size={40} weight="fill" className="text-emerald-500" />
@@ -217,7 +217,7 @@ export function SpotifyPlayer({ shouldStop }: { shouldStop?: boolean }) {
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* Mini Player */}
-      <div className="bg-zinc-900/40 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group">
+      <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group">
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] to-transparent pointer-events-none" />
         
         <div className="flex flex-col gap-8 relative z-10">

@@ -69,4 +69,17 @@
       gap: 2rem;
     }
   }
+
+  .draggable {
+    -webkit-app-region: drag;
+  }
+
+  .nodrag {
+    -webkit-app-region: no-drag;
+  }
+
+  .no-blur {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }
