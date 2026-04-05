@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
+
+:root {
+  /* Colors - Zinc based neutrals */
+  --bg: #09090b;
+  --surface: #18181b;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(255, 255, 255, 0.15);
+  
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #52525b;
+
+  --accent: #10b981; /* Emerald-500 */
+  --accent-glow: rgba(16, 185, 129, 0.15);
+
+  /* Typography */
+  --font-sans: 'Geist', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+
+  /* Spacing */
+  --gap: 1.5rem;
+  --radius: 1.5rem;
+
+  /* Materiality */
+  --glass-bg: rgba(24, 24, 27, 0.6);
+  --glass-blur: 16px;
+  --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+}
