@@ -3,6 +3,7 @@
 interface Window {
   api: {
     loginSpotify: () => Promise<any>;
+    refreshSpotifyToken: (refreshToken: string) => Promise<any>;
     onSpotifyTokens: (callback: (tokens: any) => void) => void;
   };
 }

@@ -5,19 +5,15 @@ const REDIRECT_URI = 'focusapp://callback';
 const SCOPES = [
   'user-read-playback-state',
   'user-modify-playback-state',
-  'user-read-currently-playing',
-  'playlist-read-private',
-  'playlist-read-collaborative',
-  'user-library-read'
+  'user-read-currently-playing'
 ];
+const SPOTIFY_CLIENT_ID = process.env.MAIN_VITE_SPOTIFY_CLIENT_ID || 'dfeac2a2c9de40768242b991f7a4e967';
 
 let authWindow: BrowserWindow | null = null;
 let codeVerifier = '';
 
 export function setupSpotifyAuth(mainWindow: BrowserWindow) {
   ipcMain.handle('spotify-login', async () => {
-    const SPOTIFY_CLIENT_ID = process.env.MAIN_VITE_SPOTIFY_CLIENT_ID || 'dfeac2a2c9de40768242b991f7a4e967';
-    
     return new Promise((resolve, reject) => {
       authWindow = new BrowserWindow({
         width: 800,
@@ -42,7 +38,6 @@ export function setupSpotifyAuth(mainWindow: BrowserWindow) {
       authUrl.searchParams.append('code_challenge', codeChallenge);
       authUrl.searchParams.append('scope', SCOPES.join(' '));
 
-      // Synchronous URL check to prevent default immediately
       const checkUrl = (url: string) => {
         if (url.startsWith(REDIRECT_URI)) {
           const urlObj = new URL(url.replace('focusapp://callback', 'http://localhost'));
@@ -63,7 +58,6 @@ export function setupSpotifyAuth(mainWindow: BrowserWindow) {
             reject(new Error(`Spotify Auth Error: ${error}`));
             if (authWindow) authWindow.close();
           } else {
-            // If it's just the redirect without code/error yet, don't close
             return false;
           }
           return true;
@@ -87,6 +81,10 @@ export function setupSpotifyAuth(mainWindow: BrowserWindow) {
       });
     });
   });
+
+  ipcMain.handle('spotify-refresh-token', async (_, refreshToken: string) => {
+    return refreshSpotifyToken(refreshToken, SPOTIFY_CLIENT_ID);
+  });
 }
 
 async function exchangeCodeForToken(code: string, clientId: string) {
@@ -105,6 +103,25 @@ async function exchangeCodeForToken(code: string, clientId: string) {
   if (!response.ok) {
     const errData = await response.json();
     throw new Error(`Token exchange failed: ${JSON.stringify(errData)}`);
+  }
+
+  return response.json();
+}
+
+async function refreshSpotifyToken(refreshToken: string, clientId: string) {
+  const response = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: clientId,
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken
+    })
+  });
+
+  if (!response.ok) {
+    const errData = await response.json();
+    throw new Error(`Token refresh failed: ${JSON.stringify(errData)}`);
   }
 
   return response.json();

@@ -3,6 +3,7 @@ import { electronAPI } from '@electron-toolkit/preload';
 
 const api = {
   loginSpotify: () => ipcRenderer.invoke('spotify-login'),
+  refreshSpotifyToken: (refreshToken: string) => ipcRenderer.invoke('spotify-refresh-token', refreshToken),
   onSpotifyTokens: (callback: (tokens: any) => void) => {
     ipcRenderer.on('spotify-tokens', (_event, tokens) => callback(tokens));
   }
