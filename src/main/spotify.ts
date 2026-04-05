@@ -2,7 +2,14 @@ import { BrowserWindow, ipcMain } from 'electron';
 import crypto from 'crypto';
 
 const REDIRECT_URI = 'focusapp://callback';
-const SCOPES = ['user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing'];
+const SCOPES = [
+  'user-read-playback-state',
+  'user-modify-playback-state',
+  'user-read-currently-playing',
+  'playlist-read-private',
+  'playlist-read-collaborative',
+  'user-library-read'
+];
 
 let authWindow: BrowserWindow | null = null;
 let codeVerifier = '';
