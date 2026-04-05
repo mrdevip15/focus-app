@@ -34,16 +34,16 @@ function App() {
   }, [isRunning]);
 
   return (
-    <div className={`bg-zinc-950 text-white min-h-[100dvh] transition-all duration-500 ${isRunning ? 'p-4 overflow-hidden' : ''}`}>
+    <div className={`bg-zinc-950 text-white min-h-[100dvh] transition-all duration-500 ${isRunning ? 'p-0 overflow-hidden' : ''}`}>
       {/* Draggable Title Bar */}
-      <div className="h-8 w-full draggable fixed top-0 left-0 z-[100] flex items-center px-4">
+      <div className={`h-8 w-full draggable fixed top-0 left-0 z-[100] flex items-center px-4 transition-opacity duration-500 ${isRunning ? 'opacity-0 hover:opacity-100' : ''}`}>
         <div className="w-2 h-2 rounded-full bg-zinc-800" />
       </div>
 
-      <main className={`container mx-auto px-6 transition-all duration-700 ${isRunning ? 'max-w-md py-4' : 'max-w-7xl py-12 md:py-24'}`}>
-        <div className={`grid gap-12 lg:gap-24 items-start ${isRunning ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-[1.5fr_1fr]'}`}>
+      <main className={`transition-all duration-700 ${isRunning ? 'w-full h-[200px]' : 'container mx-auto px-6 py-12 md:py-24 max-w-7xl'}`}>
+        <div className={`grid items-start transition-all duration-700 ${isRunning ? 'grid-cols-1 gap-0' : 'grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-12 lg:gap-24'}`}>
           {/* Left Column: Timer & Controls */}
-          <section className="flex flex-col items-start w-full nodrag">
+          <section className={`flex flex-col items-start w-full transition-all duration-700 ${isRunning ? 'h-full' : ''}`}>
             {!isRunning && (
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -57,18 +57,20 @@ function App() {
 
             {!isRunning && <ModeSelector currentMode={mode} onModeChange={changeMode} />}
 
-            <div className={`w-full bg-zinc-900/40 border border-white/5 rounded-[2.5rem] relative overflow-hidden shadow-2xl transition-all duration-500 ${isRunning ? 'p-6 no-blur' : 'p-8 md:p-16 backdrop-blur-xl'}`}>
+            <div className={`w-full relative overflow-hidden transition-all duration-500 ${isRunning ? 'h-[200px] p-0' : 'bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-8 md:p-16 backdrop-blur-xl shadow-2xl'}`}>
               {/* Progress Bar */}
               <motion.div 
-                className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 origin-left"
+                className={`absolute left-0 right-0 bg-white/20 origin-left z-10 ${isRunning ? 'top-0 h-1' : 'bottom-0 h-1'}`}
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: progress }}
                 transition={{ ease: "linear", duration: 0.1 }}
               />
               
-              <TimerDisplay timeLeft={timeLeft} />
-              <div className="nodrag">
-                <TimerControls isRunning={isRunning} toggle={toggle} reset={reset} />
+              <div className={`flex flex-col items-center justify-center transition-all duration-700 ${isRunning ? 'h-full bg-zinc-950/80 backdrop-blur-md' : ''}`}>
+                <TimerDisplay timeLeft={timeLeft} isRunning={isRunning} />
+                <div className="nodrag">
+                  <TimerControls isRunning={isRunning} toggle={toggle} reset={reset} />
+                </div>
               </div>
             </div>
           </section>
