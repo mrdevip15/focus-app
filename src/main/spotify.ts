@@ -1,10 +1,6 @@
 import { BrowserWindow, ipcMain } from 'electron';
 import crypto from 'crypto';
 
-// In a real app, you'd prompt the user for this or use a proxy server to hide it.
-const SPOTIFY_CLIENT_ID = process.env.MAIN_VITE_SPOTIFY_CLIENT_ID || '8e4f1a23c31c4f6faef49edc5614949b'; 
-console.log('Using Spotify Client ID:', SPOTIFY_CLIENT_ID);
- // Dummy ID to prevent crash
 const REDIRECT_URI = 'focusapp://callback';
 const SCOPES = ['user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing'];
 
@@ -13,10 +9,8 @@ let codeVerifier = '';
 
 export function setupSpotifyAuth(mainWindow: BrowserWindow) {
   ipcMain.handle('spotify-login', async () => {
-    // We lookup the ID here to ensure env vars are populated, with your ID as the default
     const SPOTIFY_CLIENT_ID = process.env.MAIN_VITE_SPOTIFY_CLIENT_ID || 'dfeac2a2c9de40768242b991f7a4e967';
-    console.log('Attempting Spotify Login with Client ID:', SPOTIFY_CLIENT_ID);
-
+    
     return new Promise((resolve, reject) => {
       authWindow = new BrowserWindow({
         width: 800,
@@ -28,7 +22,6 @@ export function setupSpotifyAuth(mainWindow: BrowserWindow) {
         }
       });
 
-      // Set a common browser UserAgent to avoid 'Agree' button issues
       authWindow.webContents.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
       codeVerifier = generateCodeVerifier();
@@ -42,29 +35,45 @@ export function setupSpotifyAuth(mainWindow: BrowserWindow) {
       authUrl.searchParams.append('code_challenge', codeChallenge);
       authUrl.searchParams.append('scope', SCOPES.join(' '));
 
+      // Synchronous URL check to prevent default immediately
+      const checkUrl = (url: string) => {
+        if (url.startsWith(REDIRECT_URI)) {
+          const urlObj = new URL(url.replace('focusapp://callback', 'http://localhost'));
+          const code = urlObj.searchParams.get('code');
+          const error = urlObj.searchParams.get('error');
+
+          if (code) {
+            exchangeCodeForToken(code, SPOTIFY_CLIENT_ID)
+              .then(tokens => {
+                mainWindow.webContents.send('spotify-tokens', tokens);
+                resolve(tokens);
+              })
+              .catch(reject)
+              .finally(() => {
+                if (authWindow) authWindow.close();
+              });
+          } else if (error) {
+            reject(new Error(`Spotify Auth Error: ${error}`));
+            if (authWindow) authWindow.close();
+          } else {
+            // If it's just the redirect without code/error yet, don't close
+            return false;
+          }
+          return true;
+        }
+        return false;
+      };
+
+      authWindow.webContents.on('will-navigate', (event, url) => {
+        if (checkUrl(url)) event.preventDefault();
+      });
+
+      authWindow.webContents.on('will-redirect', (event, url) => {
+        if (checkUrl(url)) event.preventDefault();
+      });
+
       authWindow.loadURL(authUrl.toString());
       authWindow.show();
-
-      authWindow.webContents.on('will-redirect', async (event, url) => {
-        if (url.startsWith(REDIRECT_URI)) {
-          event.preventDefault();
-          const parsedUrl = new URL(url);
-          const code = parsedUrl.searchParams.get('code');
-          if (code) {
-            try {
-              const tokens = await exchangeCodeForToken(code);
-              mainWindow.webContents.send('spotify-tokens', tokens);
-              resolve(tokens);
-            } catch (err) {
-              reject(err);
-            }
-          }
-          if (authWindow) {
-            authWindow.close();
-            authWindow = null;
-          }
-        }
-      });
 
       authWindow.on('closed', () => {
         authWindow = null;
@@ -73,14 +82,12 @@ export function setupSpotifyAuth(mainWindow: BrowserWindow) {
   });
 }
 
-async function exchangeCodeForToken(code: string) {
+async function exchangeCodeForToken(code: string, clientId: string) {
   const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
-      client_id: SPOTIFY_CLIENT_ID,
+      client_id: clientId,
       grant_type: 'authorization_code',
       code,
       redirect_uri: REDIRECT_URI,
@@ -89,7 +96,8 @@ async function exchangeCodeForToken(code: string) {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to exchange token');
+    const errData = await response.json();
+    throw new Error(`Token exchange failed: ${JSON.stringify(errData)}`);
   }
 
   return response.json();
