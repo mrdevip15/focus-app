@@ -12,11 +12,13 @@
   }
 
   body {
-    background-color: var(--bg);
+    background-color: transparent;
     color: var(--text-primary);
     font-family: var(--font-sans);
     min-height: 100dvh;
     overflow-x: hidden;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
   }

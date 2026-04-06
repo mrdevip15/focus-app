@@ -16,10 +16,10 @@ export const TimerDisplay = ({ timeLeft, isRunning }: TimerDisplayProps) => {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`font-bold tracking-tighter mono leading-none select-none text-white transition-all duration-500 ${isRunning ? 'text-[3.5rem]' : 'text-[12rem]'}`}
+        className={`font-bold tracking-tighter mono leading-none select-none text-white transition-all duration-500 ${isRunning ? 'text-[1.1rem]' : 'text-[12rem]'}`}
       >
         <span>{format(minutes)}</span>
-        <span className="text-zinc-700">:</span>
+        <span className={`${isRunning ? 'text-zinc-600 px-[1px]' : 'text-zinc-700'}`}>:</span>
         <span>{format(seconds)}</span>
       </motion.div>
     </div>

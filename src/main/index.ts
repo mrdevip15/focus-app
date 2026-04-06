@@ -8,8 +8,8 @@ app.setAsDefaultProtocolClient('focusapp');
 let mainWindow: BrowserWindow | null = null;
 const ORIGINAL_WIDTH = 900;
 const ORIGINAL_HEIGHT = 670;
-const PIP_WIDTH = 340;
-const PIP_HEIGHT = 200;
+const PIP_WIDTH = 100;
+const PIP_HEIGHT = 40;
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
@@ -19,6 +19,7 @@ function createWindow(): void {
     autoHideMenuBar: true,
     frame: false,
     transparent: true,
+    resizable: true,
     backgroundColor: '#00000000',
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
