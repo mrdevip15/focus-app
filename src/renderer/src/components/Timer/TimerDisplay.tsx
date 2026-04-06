@@ -19,7 +19,7 @@ export const TimerDisplay = ({ timeLeft, isRunning }: TimerDisplayProps) => {
         className={`font-bold tracking-tighter mono leading-none select-none text-white transition-all duration-500 ${
           isRunning 
             ? 'text-[1.1rem]' 
-            : 'text-[clamp(4rem,20vw,15rem)]'
+            : 'text-[clamp(4rem,11vw,8rem)]'
         }`}
       >
         <span>{format(minutes)}</span>
