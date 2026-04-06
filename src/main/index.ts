@@ -57,12 +57,35 @@ ipcMain.on('toggle-pip', (event, isPip) => {
     win.setSize(PIP_WIDTH, PIP_HEIGHT, true);
     win.setPosition(width - PIP_WIDTH - 20, 40, true);
     win.setOpacity(0.85);
+    win.setResizable(false);
   } else {
     win.setAlwaysOnTop(false);
     win.setSize(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, true);
     win.center();
     win.setOpacity(1.0);
+    win.setResizable(true);
   }
+});
+
+ipcMain.on('window-minimize', (event) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  win?.minimize();
+});
+
+ipcMain.on('window-maximize', (event) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  if (win) {
+    if (win.isMaximized()) {
+      win.unmaximize();
+    } else {
+      win.maximize();
+    }
+  }
+});
+
+ipcMain.on('window-close', (event) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  win?.close();
 });
 
 app.whenReady().then(() => {

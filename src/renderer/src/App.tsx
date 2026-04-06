@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { X, Minus, CornersOut } from '@phosphor-icons/react';
 import { TimerDisplay } from './components/Timer/TimerDisplay';
 import { TimerControls } from './components/Timer/TimerControls';
 import { ModeSelector } from './components/Modes/ModeSelector';
@@ -33,6 +34,10 @@ function App() {
     }
   }, [isRunning]);
 
+  const handleMinimize = () => window.api?.minimize?.();
+  const handleMaximize = () => window.api?.maximize?.();
+  const handleClose = () => window.api?.close?.();
+
   if (isRunning) {
     return (
       <div className="h-[40px] w-[100px] bg-zinc-950/90 border border-white/10 rounded-full flex items-center justify-center relative overflow-hidden draggable group select-none">
@@ -64,9 +69,30 @@ function App() {
 
   return (
     <div className="bg-zinc-950 text-white min-h-[100dvh] transition-all duration-500">
-      {/* Draggable Title Bar */}
-      <div className="h-8 w-full draggable fixed top-0 left-0 z-[100] flex items-center px-4">
-        <div className="w-2 h-2 rounded-full bg-zinc-800" />
+      {/* Custom Title Bar with Window Controls */}
+      <div className="h-10 w-full draggable fixed top-0 left-0 z-[100] flex items-center justify-between px-4">
+        <div className="flex items-center gap-2 nodrag">
+          <button 
+            onClick={handleClose}
+            className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 flex items-center justify-center group"
+          >
+            <X size={8} className="text-red-950 opacity-0 group-hover:opacity-100" weight="bold" />
+          </button>
+          <button 
+            onClick={handleMinimize}
+            className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 flex items-center justify-center group"
+          >
+            <Minus size={8} className="text-yellow-950 opacity-0 group-hover:opacity-100" weight="bold" />
+          </button>
+          <button 
+            onClick={handleMaximize}
+            className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 flex items-center justify-center group"
+          >
+            <CornersOut size={8} className="text-green-950 opacity-0 group-hover:opacity-100" weight="bold" />
+          </button>
+        </div>
+        <div className="text-[10px] uppercase tracking-[0.3em] text-zinc-600 font-medium select-none">Focus App</div>
+        <div className="w-20" /> {/* Spacer to center the title */}
       </div>
 
       <main className="container mx-auto px-6 py-12 md:py-24 max-w-7xl">
