@@ -237,33 +237,37 @@ export function SpotifyPlayer({ shouldStop }: { shouldStop?: boolean }) {
             {isPlaying && <Visualizer isPlaying={isPlaying} />}
           </div>
 
-          <div className="flex items-center justify-between gap-4">
-            <button 
-              onClick={toggleShuffle} 
-              className={`p-2 transition-all hover:scale-110 active:scale-90 ${shuffleState ? 'text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]' : 'text-zinc-600 hover:text-zinc-400'}`}
-            >
-              <Shuffle size={20} weight={shuffleState ? "bold" : "regular"} />
-            </button>
-
-            <div className="flex items-center gap-6">
-              <button onClick={skipPrevious} className="text-zinc-400 hover:text-white transition-all hover:scale-110 active:scale-90">
-                <SkipBack size={26} weight="fill" />
-              </button>
+          <div className="flex items-center justify-between w-full mt-2">
+            <div className="flex flex-1 justify-start">
               <button 
-                onClick={togglePlay} 
-                className="w-16 h-16 bg-white text-zinc-950 rounded-3xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-xl shadow-emerald-500/10 group/play"
+                onClick={toggleShuffle} 
+                className={`p-2 -ml-2 transition-all hover:scale-110 active:scale-90 ${shuffleState ? 'text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]' : 'text-zinc-600 hover:text-zinc-400'}`}
               >
-                <div className="absolute inset-0 bg-emerald-500/10 rounded-3xl blur-xl opacity-0 group-hover/play:opacity-100 transition-opacity" />
-                {isPlaying ? <Pause size={32} weight="fill" className="relative z-10" /> : <Play size={32} weight="fill" className="relative z-10 translate-x-1" />}
-              </button>
-              <button onClick={skipNext} className="text-zinc-400 hover:text-white transition-all hover:scale-110 active:scale-90">
-                <SkipForward size={26} weight="fill" />
+                <Shuffle size={20} weight={shuffleState ? "bold" : "regular"} />
               </button>
             </div>
 
-            <button onClick={handleLogout} className="p-2 text-zinc-600 hover:text-red-500 transition-all hover:rotate-90">
-              <X size={20} weight="bold" />
-            </button>
+            <div className="flex items-center gap-4 min-[400px]:gap-6">
+              <button onClick={skipPrevious} className="text-zinc-400 hover:text-white transition-all hover:scale-110 active:scale-90">
+                <SkipBack size={24} weight="fill" className="min-[400px]:w-[26px] min-[400px]:h-[26px]" />
+              </button>
+              <button 
+                onClick={togglePlay} 
+                className="w-14 h-14 min-[400px]:w-16 min-[400px]:h-16 bg-white text-zinc-950 rounded-[1.25rem] min-[400px]:rounded-3xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-xl shadow-emerald-500/10 group/play"
+              >
+                <div className="absolute inset-0 bg-emerald-500/10 rounded-[1.25rem] min-[400px]:rounded-3xl blur-xl opacity-0 group-hover/play:opacity-100 transition-opacity" />
+                {isPlaying ? <Pause size={28} weight="fill" className="relative z-10 min-[400px]:w-8 min-[400px]:h-8" /> : <Play size={28} weight="fill" className="relative z-10 translate-x-1 min-[400px]:w-8 min-[400px]:h-8" />}
+              </button>
+              <button onClick={skipNext} className="text-zinc-400 hover:text-white transition-all hover:scale-110 active:scale-90">
+                <SkipForward size={24} weight="fill" className="min-[400px]:w-[26px] min-[400px]:h-[26px]" />
+              </button>
+            </div>
+
+            <div className="flex flex-1 justify-end">
+              <button onClick={handleLogout} className="p-2 -mr-2 text-zinc-600 hover:text-red-500 transition-all hover:rotate-90">
+                <X size={20} weight="bold" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
