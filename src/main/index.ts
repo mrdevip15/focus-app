@@ -15,6 +15,8 @@ function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: ORIGINAL_WIDTH,
     height: ORIGINAL_HEIGHT,
+    minWidth: 310,
+    minHeight: 400,
     show: false,
     autoHideMenuBar: true,
     frame: false,
@@ -53,12 +55,14 @@ ipcMain.on('toggle-pip', (event, isPip) => {
     const primaryDisplay = screen.getPrimaryDisplay();
     const { width } = primaryDisplay.workAreaSize;
     
+    win.setMinimumSize(PIP_WIDTH, PIP_HEIGHT);
     win.setAlwaysOnTop(true, 'screen-saver');
     win.setSize(PIP_WIDTH, PIP_HEIGHT, true);
     win.setPosition(width - PIP_WIDTH - 20, 40, true);
     win.setOpacity(0.85);
     win.setResizable(false);
   } else {
+    win.setMinimumSize(310, 400);
     win.setAlwaysOnTop(false);
     win.setSize(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, true);
     win.center();

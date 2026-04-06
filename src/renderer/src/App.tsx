@@ -96,7 +96,7 @@ function App() {
       </div>
 
       <main className="w-full px-[4vw] py-[8vw]">
-        <div className="grid items-start grid-cols-[1.5fr_1fr] gap-[6vw] w-full">
+        <div className="grid items-start grid-cols-1 min-[638px]:grid-cols-[1.5fr_1fr] gap-[8vw] min-[638px]:gap-[6vw] w-full">
           {/* Left Column: Timer & Controls */}
           <section className="flex flex-col items-start w-full min-w-0">
             <motion.div
@@ -129,7 +129,7 @@ function App() {
           </section>
 
           {/* Right Column: Utilities */}
-          <aside className="flex flex-col gap-[3vw] mt-[max(40px,8vw)] w-full nodrag min-w-0">
+          <aside className="flex flex-col gap-[3vw] mt-0 min-[638px]:mt-[max(40px,8vw)] w-full nodrag min-w-0">
             <SpotifyPlayer shouldStop={shouldStopSpotify} />
             <SoundSwitcher 
               currentSound={currentSound}
