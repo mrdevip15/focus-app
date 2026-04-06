@@ -1,8 +1,8 @@
-# Focus App
+# Focus App (Desktop)
 
-A minimal, high-performance focus timer designed for deep work sessions. Built with React 19, TypeScript, and Tailwind CSS, Focus App provides a distraction-free environment with integrated soundscapes to help you maintain flow.
+A minimal, high-performance desktop focus timer designed for deep work sessions. Built with Electron, React 19, TypeScript, and Tailwind CSS, Focus App provides a beautifully native, highly-featured, distraction-free environment to help you maintain flow.
 
-![Focus App Hero](./src/assets/hero.png)
+![Focus App Icon](./build/icon.png)
 
 ## Features
 
@@ -10,18 +10,18 @@ A minimal, high-performance focus timer designed for deep work sessions. Built w
   - **Focus**: 25-minute Pomodoro sessions.
   - **Deep**: 50-minute blocks for complex tasks.
   - **Ultra**: 90-minute extended sessions for maximum immersion.
-- **Ambient Soundscapes**: Built-in audio environments including Cafe, Forest, Rain, and White Noise to mask distractions.
-- **Visual Progress**: Real-time progress tracking with smooth animations powered by Framer Motion.
-- **Modern Aesthetic**: A dark-themed, minimalist UI optimized for concentration.
+- **Picture-in-Picture (PiP) Mode**: Automatically collapses into an ultra-compact widget while your timer is running, keeping your screen clutter-free.
+- **Spotify Integration**: Connect and control your Spotify music playback directly inside the app.
+- **Ambient Soundscapes**: Built-in high-quality audio environments including Cafe, Forest, Rain, and White Noise.
+- **Native Experience**: Frameless window design, transparent background support, and cross-platform installation for macOS and Windows. 
 
 ## Tech Stack
 
-- **Framework**: [React 19](https://react.dev/)
+- **Desktop Framework**: [Electron](https://www.electronjs.org/) & [Electron-Vite](https://electron-vite.org/)
+- **Frontend Framework**: [React 19](https://react.dev/)
 - **Build Tool**: [Vite 8](https://vitejs.dev/)
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Icons**: [Phosphor Icons](https://phosphoricons.com/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
 
 ## Getting Started
 
@@ -43,30 +43,31 @@ A minimal, high-performance focus timer designed for deep work sessions. Built w
    npm install
    ```
 
-3. Start the development server:
+3. Start the development server (runs the Electron app locally):
    ```bash
    npm run dev
    ```
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser.
+## Packaging & Distribution
 
-## Project Structure
+To compile the application into production-ready installers for your platform and operating system:
 
-```text
-src/
-├── components/      # UI Components (Timer, Soundscape, Modes)
-├── hooks/           # Custom React hooks (useTimer, useSound)
-├── music/           # Audio assets for soundscapes
-├── styles/          # Global and variable CSS definitions
-└── App.tsx          # Main application entry point
+**To build for Windows (.exe)**
+```bash
+npm run build:win
 ```
 
-## Scripts
+**To build for macOS (.dmg / .zip)**
+```bash
+npm run build:mac
+```
 
-- `npm run dev`: Start the development server.
-- `npm run build`: Build the application for production.
-- `npm run lint`: Run ESLint to check for code quality.
-- `npm run preview`: Preview the production build locally.
+**To build for both platforms simultaneously:**
+```bash
+npm run dist
+```
+
+Your installation packages will be automatically generated inside the `dist/` directory.
 
 ## License
 

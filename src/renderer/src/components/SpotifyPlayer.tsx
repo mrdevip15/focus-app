@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   Play, Pause, SkipForward, SkipBack, Shuffle, 
-  SpotifyLogo, X, DeviceMobile, Heart, ListBullets, MusicNotes, ArrowsClockwise
+  SpotifyLogo, X, DeviceMobile, ArrowsClockwise
 } from '@phosphor-icons/react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const Visualizer = ({ isPlaying }: { isPlaying: boolean }) => {
   return (
